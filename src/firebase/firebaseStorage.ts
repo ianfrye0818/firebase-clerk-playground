@@ -1,11 +1,12 @@
 //library imports
 import {
-  uploadBytes,
   ref,
   getDownloadURL,
   deleteObject,
   listAll,
   getMetadata,
+  uploadBytesResumable,
+  UploadTaskSnapshot,
 } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -13,12 +14,49 @@ import { v4 as uuidv4 } from 'uuid';
 import { storage } from './firebaseConfig';
 
 //upload image to storage bucket
-export const uploadImage = async (files: File[], id: string) => {
+// export const uploadImage = async (files: File[], id: string) => {
+//   try {
+//     const urls = await Promise.all(
+//       files.map(async (file) => {
+//         const storageRef = ref(storage, `images/${id}/${uuidv4()}${file.name}`);
+//         await uploadBytes(storageRef, file);
+//         const url = await getDownloadURL(storageRef);
+//         return url;
+//       })
+//     );
+//     return urls;
+//   } catch (error) {
+//     console.error(error);
+//     return 'Something went wrong! Please try again.';
+//   }
+// };
+
+export const uploadImage = async (
+  files: File[],
+  id: string,
+  setUploadProgress: (progress: number) => void
+) => {
   try {
     const urls = await Promise.all(
       files.map(async (file) => {
         const storageRef = ref(storage, `images/${id}/${uuidv4()}${file.name}`);
-        await uploadBytes(storageRef, file);
+
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        // Set up progress listener
+        uploadTask.on(
+          'state_changed',
+          (snapshot: UploadTaskSnapshot) => {
+            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            setUploadProgress(progress);
+          },
+          (error: Error) => {
+            console.error(error);
+          }
+        );
+
+        await uploadTask;
+
         const url = await getDownloadURL(storageRef);
         return url;
       })

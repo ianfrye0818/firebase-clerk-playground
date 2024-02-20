@@ -16,6 +16,7 @@ import { imageData } from '../../types/index';
 export default function Home() {
   //state for storing image files for upload
   const [image, setImage] = useState<File[] | null>(null);
+  const [progress, setProgress] = useState<number>(0);
   //state for storing image data
   const [imageMetaData, setImageMetaData] = useState<imageData[]>([]);
   //get the user from the useUser hook (clerk)
@@ -39,7 +40,7 @@ export default function Home() {
     if (!user) return;
 
     //upload the image using the user.id as the /images/user.id/uuid + file.name
-    await uploadImage(image, user.id);
+    await uploadImage(image, user.id, (progress) => setProgress(progress));
     //gets the metadata of the images in the user's folder
     const metadata = await getAllDownloadUrlsFromUserFolder(user.id);
     //if the metadata is an object, set the imageMetaData state to the metadata
@@ -48,6 +49,7 @@ export default function Home() {
     if (metadata instanceof Object) {
       setImageMetaData(metadata);
       setImage(null);
+      setProgress(0);
     }
   }
 
@@ -109,15 +111,29 @@ export default function Home() {
             Upload
           </button>
         </form>
+        {progress > 0 && (
+          <progress
+            value={progress}
+            max='100'
+          ></progress>
+        )}
         {/* map over the imageMetaData and display the images */}
         {imageMetaData.map((data) => (
-          <div key={data.url}>
+          <div
+            className='flex gap-2 items-center'
+            key={data.url}
+          >
             <img
               src={data.url}
               alt='uploaded'
               width='700'
             />
-            <button onClick={() => handleDelete(data.metadata.fullPath)}>Delete</button>
+            <button
+              className='p-2 bg-red-500 hover:bg-red-600 text-white min-w-[100px]'
+              onClick={() => handleDelete(data.metadata.fullPath)}
+            >
+              Delete
+            </button>
           </div>
         ))}
       </main>
