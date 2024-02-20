@@ -1,5 +1,8 @@
+//library imports
 import { useState, createContext, useEffect } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
+
+//custom imports
 import { auth } from '../firebase/firebaseConfig';
 
 //create the context
@@ -13,6 +16,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    // subscibe to auth state changes from firebase
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
     });

@@ -8,13 +8,30 @@ import RootLayout from './layouts/RootLayout';
 
 // Import the components
 import Home from './pages/home/Home';
-// import SignInPage from './pages/signin/SignIn';
-// import SignUpPage from './pages/signup/SignUp';
+import { SignIn, SignUp } from '@clerk/clerk-react';
 
 const router = createBrowserRouter([
   {
     element: <RootLayout />,
-    children: [{ path: '/', element: <Home /> }],
+    children: [
+      { path: '/', element: <Home /> },
+      {
+        path: '/signin',
+        element: (
+          <div className='w-screen h-screen flex flex-col justify-center items-center'>
+            <SignIn />
+          </div>
+        ),
+      },
+      {
+        path: '/signup',
+        element: (
+          <div className='w-screen h-screen flex flex-col justify-center items-center'>
+            <SignUp />
+          </div>
+        ),
+      },
+    ],
   },
 ]);
 
