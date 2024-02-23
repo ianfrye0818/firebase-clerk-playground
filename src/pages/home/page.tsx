@@ -103,11 +103,12 @@ export default function Home() {
             id='image'
             name='image'
             type='file'
+            accept='image/*'
             multiple={true}
             onChange={(e) => setImage(Array.from(e.target.files || []))}
           />
           <button
-            className='p-3 rounded-md border min-w-[150px] my-4 border-gray-600'
+            className='p-3 rounded-md border min-w-[150px] my-4 border-gray-600 hover:bg-gray-600 hover:text-white transition-all duration-300 ease-in-out'
             type='submit'
           >
             Upload
