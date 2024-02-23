@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/clerk-react';
+import { FaRegTrashAlt } from 'react-icons/fa';
+
 //custom imports
 import {
   getAllDownloadUrlsFromUserFolder,
@@ -120,7 +122,7 @@ export default function Home() {
         {/* map over the imageMetaData and display the images */}
         {imageMetaData.map((data) => (
           <div
-            className='flex gap-2 items-center'
+            className='flex gap-2 items-center relative'
             key={data.url}
           >
             <img
@@ -129,10 +131,10 @@ export default function Home() {
               width='700'
             />
             <button
-              className='p-2 bg-red-500 hover:bg-red-600 text-white min-w-[100px]'
+              className='p-2 bg-white hover:bg-red-600 text-red-600 hover:text-white  absolute top-5 right-5 rounded-md'
               onClick={() => handleDelete(data.metadata.fullPath)}
             >
-              Delete
+              <FaRegTrashAlt />
             </button>
           </div>
         ))}
