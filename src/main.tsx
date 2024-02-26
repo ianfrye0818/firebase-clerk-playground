@@ -9,12 +9,14 @@ import RootLayout from './layouts/RootLayout';
 // Import the components
 import Home from './pages/home/Home';
 import { SignIn, SignUp } from '@clerk/clerk-react';
+import Dropzone from './pages/dropzone/Dropzone';
 
 const router = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
       { path: '/', element: <Home /> },
+      { path: '/dropzone', element: <Dropzone /> },
       {
         path: '/signin',
         element: (

@@ -57,14 +57,20 @@ export const uploadImage = async (
 
         await uploadTask;
 
-        const url = await getDownloadURL(storageRef);
-        return url;
+        // const url = await getDownloadURL(storageRef);
+        // const metadata = await getMetadata(storageRef);
+        const alldata = await getAllDownloadUrlsFromUserFolder(id);
+        if (alldata !== null) {
+          return alldata;
+        } else {
+          return [];
+        }
       })
     );
-    return urls;
+    return urls.flat();
   } catch (error) {
     console.error(error);
-    return 'Something went wrong! Please try again.';
+    return null;
   }
 };
 
@@ -107,7 +113,7 @@ export async function getAllDownloadUrlsFromUserFolder(id: string) {
     return sortedUrlList;
   } catch (error) {
     console.error(error);
-    return 'Something went wrong! Please try again.';
+    return null;
   }
 }
 
@@ -116,10 +122,15 @@ export async function deleteImage(path: string) {
   try {
     const imageRef = ref(storage, path);
     await deleteObject(imageRef);
-    return 'Image deleted successfully!';
+    const allimages = await getAllDownloadUrlsFromUserFolder(path);
+    if (allimages !== null) {
+      return allimages;
+    } else {
+      return null;
+    }
   } catch (error) {
     console.error(error);
-    return 'Something went wrong! Please try again.';
+    return null;
   }
 }
 
