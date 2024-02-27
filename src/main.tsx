@@ -7,7 +7,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootLayout from './layouts/RootLayout';
 
 // Import the components
-import Home from './pages/home/Home';
+import Home from './pages/home/page';
 import { SignIn, SignUp } from '@clerk/clerk-react';
 import Dropzone from './pages/dropzone/Dropzone';
 
